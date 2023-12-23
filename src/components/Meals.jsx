@@ -27,7 +27,7 @@ export default function Meals() {
             <ul  id="meals">
                 { meals && meals.map((meal) =>
                 (
-                    <MealItem meal={meal} />
+                    <MealItem key={meal.id} meal={meal} />
                 ))}
             </ul>
         </section>

@@ -1,0 +1,129 @@
+import { createContext, useReducer } from "react";
+
+const CartContext = createContext({
+    items: [],
+    onAddToCart: () => {},
+    onUpdateCartItemQuantity: () => {},
+    onRemoveFromCart: () => {}
+});
+
+function cartReducer(state, action) {
+    if(action.type === 'ADD_ITEM'){
+        const updatedItems = [...state.items];
+    
+          const existingCartItemIndex = updatedItems.findIndex(
+            (cartItem) => cartItem.id === action.product.id
+          );
+          const existingCartItem = updatedItems[existingCartItemIndex];
+    
+          if (existingCartItem) {
+            const updatedItem = {
+              ...existingCartItem,
+              quantity: existingCartItem.quantity + 1,
+            };
+            updatedItems[existingCartItemIndex] = updatedItem;
+          } else {
+            // action.product
+            
+            updatedItems.push({
+                ...action.product,
+                quantity: 1
+            });
+          }
+    
+          return {
+            ...state,
+            items: updatedItems,
+          };
+    }
+
+    if(action.type === 'UPDATE_ITEM'){
+        const updatedItems = [...state.items];
+          const updatedItemIndex = updatedItems.findIndex(
+            (item) => item.id === action.product.id
+          );
+    
+          const updatedItem = {
+            ...updatedItems[updatedItemIndex],
+          };
+    
+          updatedItem.quantity += action.amount;
+    
+          if (updatedItem.quantity <= 0) {
+            updatedItems.splice(updatedItemIndex, 1);
+          } else {
+            updatedItems[updatedItemIndex] = updatedItem;
+          }
+    
+          return {
+            ...state,
+            items: updatedItems,
+          };
+    }
+
+    if(action.type === 'REMOVE_ITEM'){
+        const updatedItems = [...state.items];
+          const updatedItemIndex = updatedItems.findIndex(
+            (item) => item.id === action.id
+          );
+        
+          const updatedItem = {
+            ...updatedItems[updatedItemIndex],
+          };
+
+          if(updatedItem.quantity === 1){
+              updatedItems.splice(updatedItemIndex, 1);
+            } else {
+                updatedItem.quantity -= 1;
+                updatedItems[updatedItemIndex] = updatedItem;
+            }
+          
+          return {
+            ...state,
+            items: updatedItems,
+          };
+    }
+    return state;
+}
+
+export function CartContextProvider({children}){
+    const [shoppingCartState, shoppingCartDispatch] = useReducer(
+        cartReducer, {
+        items: [], 
+      }
+    );
+
+    const cartContext = {
+        items: shoppingCartState.items,
+        onAddToCart: onAddToCart,
+        onUpdateCartItemQuantity: onUpdateCartItemQuantity,
+        onRemoveFromCart: onRemoveFromCart
+    }
+    function onAddToCart(product) {
+        shoppingCartDispatch({
+            type: 'ADD_ITEM',
+            product: product
+        });
+    }
+    
+      function onUpdateCartItemQuantity(product, amount) {
+        shoppingCartDispatch({
+            type: 'UPDATE_ITEM',
+            product: product,
+            amount: amount
+        });
+      }
+    
+      function onRemoveFromCart(id) {
+        shoppingCartDispatch({
+            type: 'REMOVE_ITEM',
+            id: id
+        });
+    }
+
+    console.log(cartContext);
+
+    return <CartContext.Provider value={cartContext} >{children}</CartContext.Provider>
+}
+
+export default CartContext;
