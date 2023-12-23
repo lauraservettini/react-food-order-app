@@ -1,34 +1,56 @@
-import { useRef, useImperativeHandle, forwardRef } from "react";
+import { useRef, useImperativeHandle, forwardRef, useContext, useState } from "react";
 import { createPortal } from "react-dom";
+
+import CartContext from "../../store/CartContext";
+
 import Cart from "./Cart";
 import Button from "../Button";
+import Checkout from "../checkout/Checkout";
 
 const CartModal = forwardRef(function CartModal({...props}, ref) {
-        const cartModal = useRef();
+        const [ show, setShow] = useState({
+            cart: false,
+            checkout: false
+        });
+
+        const modal = useRef();
+        const cartContext = useContext(CartContext);
     
         function closeCartModal() {
-            cartModal.current.close();
+            modal.current.close();
+            setShow({
+                    cart: false,
+                    checkout: false
+                });
         }
     
         function closeCartModalToCheckout() {
-            cartModal.current.close();
+            setShow({
+                cart: false,
+                checkout: true
+            });
         }
     
         useImperativeHandle(ref, () => {
             return {
               openCartModal: () => {
-                cartModal.current.showModal();
+                modal.current.showModal();
+                setShow({
+                    cart: true,
+                    checkout: false
+                });
               },
             };
           });
     
         return createPortal(
-            <dialog ref={cartModal} className="modal" onClose={closeCartModal}>
-                <Cart />
-                <div className="modal-actions">
+            <dialog ref={modal} className="modal" onClose={closeCartModal}>
+                {show.cart && <Cart />}
+                {show.cart && <div className="modal-actions">
                     <Button textOnly onClick={closeCartModal}>Close</Button>
-                    <Button onClick={closeCartModalToCheckout}>Checkout</Button>
-                </div>
+                    {cartContext.items.length >0 && <Button onClick={closeCartModalToCheckout}>Checkout</Button>}
+                </div>}
+                {show.checkout && <Checkout onClose={closeCartModal}/>}
             </dialog>,
             document.getElementById('modal')
         );
