@@ -1,5 +1,5 @@
 import Header from "./components/Header";
-import Meals from "./components/Meals";
+import Meals from "./components/Meal/Meals";
 import { CartContextProvider } from "./store/CartContext";
 
 function App() {
