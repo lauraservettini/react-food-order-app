@@ -1,1 +1,42 @@
-[]
+[
+  {
+    "items": [
+      {
+        "id": "m1",
+        "name": "Mac & Cheese",
+        "price": "8.99",
+        "description": "Creamy cheddar cheese mixed with perfectly cooked macaroni, topped with crispy breadcrumbs. A classic comfort food.",
+        "image": "images/mac-and-cheese.jpg",
+        "quantity": 1
+      }
+    ],
+    "customer": {
+      "name": "s",
+      "email": "s@e.c",
+      "address": "s",
+      "postal-code": "s",
+      "city": "s"
+    },
+    "id": "223.4624756915653"
+  },
+  {
+    "items": [
+      {
+        "id": "m2",
+        "name": "Margherita Pizza",
+        "price": "12.99",
+        "description": "A classic pizza with fresh mozzarella, tomatoes, and basil on a thin and crispy crust.",
+        "image": "images/margherita-pizza.jpg",
+        "quantity": 1
+      }
+    ],
+    "customer": {
+      "name": "s",
+      "email": "s@e.c",
+      "address": "s",
+      "postal-code": "s",
+      "city": "s"
+    },
+    "id": "293.857338768081"
+  }
+]
